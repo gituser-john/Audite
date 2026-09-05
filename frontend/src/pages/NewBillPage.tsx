@@ -1,5 +1,6 @@
 import { useState, type ChangeEvent, type FormEvent } from "react"
 import { useAuth } from "@clerk/clerk-react"
+import { fetchWithAuth } from "@/lib/api"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -84,11 +85,8 @@ export default function NewBillPage() {
         formData.append("notes", notes.trim())
       }
 
-      const response = await fetch("http://localhost:8000/api/bills/upload", {
+      const response = await fetchWithAuth("/api/bills/upload", token, {
         method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
         body: formData,
       })
 

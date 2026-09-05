@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 import { useAuth } from "@clerk/clerk-react"
+import { fetchWithAuth } from "@/lib/api"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -52,11 +53,7 @@ export default function BillsPage() {
         throw new Error("Could not retrieve authentication token. Please sign in.")
       }
 
-      const response = await fetch("http://localhost:8000/api/bills", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
+      const response = await fetchWithAuth("/api/bills", token)
 
       if (!response.ok) {
         throw new Error(`Failed to load bills: HTTP ${response.status}`)

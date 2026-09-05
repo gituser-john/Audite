@@ -1,5 +1,6 @@
 import { useEffect, useState, useMemo } from "react"
 import { useAuth } from "@clerk/clerk-react"
+import { fetchWithAuth } from "@/lib/api"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -66,11 +67,7 @@ export default function AdminPage() {
         throw new Error("Authentication token not available.")
       }
 
-      const response = await fetch("http://localhost:8000/api/admin/bills", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
+      const response = await fetchWithAuth("/api/admin/bills", token)
 
       if (response.status === 403) {
         setIsForbidden(true)
@@ -103,12 +100,11 @@ export default function AdminPage() {
     setUpdatingStatus(true)
     try {
       const token = await getToken()
-      const response = await fetch(`http://localhost:8000/api/admin/bills/${billId}/status`, {
+      if (!token) {
+        throw new Error("Authentication token not available.")
+      }
+      const response = await fetchWithAuth(`/api/admin/bills/${billId}/status`, token, {
         method: "PATCH",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
         body: JSON.stringify({ status: newStatus }),
       })
 

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 import { SignedIn, SignedOut, SignInButton, useAuth, useUser } from "@clerk/clerk-react"
+import { fetchWithAuth } from "@/lib/api"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
@@ -47,9 +48,7 @@ export default function HomePage() {
 
         // 1. Fetch user role from /api/users/me
         try {
-          const userRes = await fetch("http://localhost:8000/api/users/me", {
-            headers: { Authorization: `Bearer ${token}` },
-          })
+          const userRes = await fetchWithAuth("/api/users/me", token)
           if (userRes.ok) {
             const profile = await userRes.json()
             if (profile.role === "admin") {
@@ -61,9 +60,7 @@ export default function HomePage() {
         }
 
         // 2. Fetch company stats from /api/admin/stats
-        const statsRes = await fetch("http://localhost:8000/api/admin/stats", {
-          headers: { Authorization: `Bearer ${token}` },
-        })
+        const statsRes = await fetchWithAuth("/api/admin/stats", token)
         if (statsRes.ok) {
           const data = await statsRes.json()
           setStats(data)
