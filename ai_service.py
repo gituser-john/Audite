@@ -81,10 +81,10 @@ def analyze_receipt(image_bytes: bytes, mime_type: str = "image/jpeg") -> Expens
     )
 
     response = client.models.generate_content(
-        model="gemini-2.5-flash",
+        model="gemini-3.1-flash-lite",
         contents=[image_part, prompt_text],
         config=config,
-    )
+    )   
 
     if response.parsed is not None:
         if isinstance(response.parsed, ExpenseAuditResult):
